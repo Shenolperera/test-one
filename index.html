@@ -67,9 +67,22 @@
     <div class="max-w-3xl">
         <h1 class="text-4xl md:text-6xl font-serif font-bold text-white mb-4">Discover the True Italy</h1>
         <p class="text-lg md:text-xl text-gray-200 mb-8">Find and review the best hotels, restaurants, and hidden gems recommended by locals and travelers.</p>
-        <div class="bg-white p-2 rounded-full flex shadow-lg max-w-xl mx-auto">
-            <input type="text" placeholder="Where do you want to go in Italy?" class="flex-grow px-4 py-2 rounded-l-full outline-none text-gray-700">
-            <button class="bg-secondary text-white px-6 py-2 rounded-full font-medium hover:bg-red-800 transition">Search</button>
+        <div class="bg-white p-2 rounded-full flex shadow-lg max-w-2xl mx-auto items-center">
+            <div class="pl-4 text-gray-400">
+                <i class="fas fa-map-marker-alt text-lg"></i>
+            </div>
+            <select id="province-select" class="flex-grow px-3 py-2 bg-transparent outline-none text-gray-700 cursor-pointer appearance-none font-medium">
+                <option value="all">All Regions / Provinces</option>
+                <option value="Lazio">Lazio (Rome)</option>
+                <option value="Lombardy">Lombardy (Milan, Lake Como)</option>
+                <option value="Emilia-Romagna">Emilia-Romagna (Modena, Bologna)</option>
+                <option value="Tuscany">Tuscany (Florence, Pisa)</option>
+                <option value="Veneto">Veneto (Venice, Verona)</option>
+                <option value="Campania">Campania (Naples, Amalfi)</option>
+            </select>
+            <button onclick="searchByProvince()" class="bg-secondary text-white px-6 py-2 md:px-8 md:py-3 rounded-full font-medium hover:bg-red-800 transition flex items-center gap-2">
+                <i class="fas fa-search"></i> <span class="hidden md:inline">Search</span>
+            </button>
         </div>
     </div>
 </div>
@@ -77,10 +90,10 @@
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Categories -->
     <div class="flex space-x-4 mb-10 overflow-x-auto pb-2">
-        <button onclick="filterPlaces('all')" class="cat-btn bg-primary text-white px-6 py-2 rounded-full font-medium shadow-sm flex-shrink-0">All Places</button>
-        <button onclick="filterPlaces('hotel')" class="cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0"><i class="fas fa-bed mr-2"></i>Hotels</button>
-        <button onclick="filterPlaces('restaurant')" class="cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0"><i class="fas fa-utensils mr-2"></i>Restaurants</button>
-        <button onclick="filterPlaces('attraction')" class="cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0"><i class="fas fa-camera mr-2"></i>Attractions</button>
+        <button onclick="setCategory('all', this)" class="cat-btn bg-primary text-white px-6 py-2 rounded-full font-medium shadow-sm flex-shrink-0 transition duration-300">All Places</button>
+        <button onclick="setCategory('hotel', this)" class="cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0 transition duration-300"><i class="fas fa-bed mr-2"></i>Hotels</button>
+        <button onclick="setCategory('restaurant', this)" class="cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0 transition duration-300"><i class="fas fa-utensils mr-2"></i>Restaurants</button>
+        <button onclick="setCategory('attraction', this)" class="cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0 transition duration-300"><i class="fas fa-camera mr-2"></i>Attractions</button>
     </div>
 
     <!-- Places Grid -->
@@ -115,6 +128,7 @@
             name: "Grand Hotel Tremezzo",
             category: "hotel",
             location: "Lake Como, Italy",
+            province: "Lombardy",
             image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
             description: "Iconic art nouveau masterpiece sitting on the western shores of Lake Como.",
             rating: 4.8,
@@ -127,6 +141,7 @@
             name: "Osteria Francescana",
             category: "restaurant",
             location: "Modena, Italy",
+            province: "Emilia-Romagna",
             image: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
             description: "A three-Michelin-star restaurant offering a modern twist on traditional Italian cuisine.",
             rating: 4.9,
@@ -140,16 +155,52 @@
             name: "The Colosseum",
             category: "attraction",
             location: "Rome, Italy",
+            province: "Lazio",
             image: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
             description: "The largest ancient amphitheatre ever built, right in the heart of Rome.",
             rating: 4.7,
             reviews: [
                 { user: "Nuwan F.", text: "Get skip-the-line tickets! It gets very crowded but breathtaking.", rating: 4, date: "Nov 02, 2025" }
             ]
+        },
+        {
+            id: 4,
+            name: "Uffizi Gallery",
+            category: "attraction",
+            location: "Florence, Italy",
+            province: "Tuscany",
+            image: "https://images.unsplash.com/photo-1581289139040-54e68e411b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            description: "A prominent art museum located adjacent to the Piazza della Signoria in the Historic Centre of Florence.",
+            rating: 4.8,
+            reviews: []
+        },
+        {
+            id: 5,
+            name: "Hotel Danieli",
+            category: "hotel",
+            location: "Venice, Italy",
+            province: "Veneto",
+            image: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            description: "A historic, legendary 5-star hotel offering spectacular views over the Venetian Lagoon.",
+            rating: 4.6,
+            reviews: []
+        },
+        {
+            id: 6,
+            name: "L'Antica Pizzeria da Michele",
+            category: "restaurant",
+            location: "Naples, Italy",
+            province: "Campania",
+            image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            description: "Serving arguably the best and most authentic Neapolitan pizza since 1870.",
+            rating: 4.9,
+            reviews: []
         }
     ];
 
     let currentSelectedPlaceId = null;
+    let activeProvince = 'all';
+    let activeCategory = 'all';
 
     function renderStars(rating) {
         let stars = '';
@@ -161,15 +212,30 @@
         return stars;
     }
 
-    function renderPlaces(filter = 'all') {
+    function applyFilters() {
         const grid = document.getElementById('places-grid');
         grid.innerHTML = '';
 
-        const filteredPlaces = filter === 'all' ? places : places.filter(p => p.category === filter);
+        // Filter by both Province AND Category
+        const filteredPlaces = places.filter(p => {
+            const matchProvince = activeProvince === 'all' || p.province === activeProvince;
+            const matchCategory = activeCategory === 'all' || p.category === activeCategory;
+            return matchProvince && matchCategory;
+        });
+
+        if (filteredPlaces.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
+                    <i class="fas fa-search-location text-4xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-600 mb-2">No places found</h3>
+                    <p class="text-gray-500">We couldn't find any ${activeCategory !== 'all' ? activeCategory + 's' : 'places'} in ${activeProvince !== 'all' ? activeProvince : 'this area'}.</p>
+                </div>`;
+            return;
+        }
 
         filteredPlaces.forEach(place => {
             const card = document.createElement('div');
-            card.className = "bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 cursor-pointer transform hover:-translate-y-1";
+            card.className = "bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 cursor-pointer transform hover:-translate-y-1 flex flex-col";
             card.onclick = () => openModal(place.id);
             
             card.innerHTML = `
@@ -178,26 +244,40 @@
                     <div class="absolute top-3 right-3 bg-white px-2 py-1 rounded-lg text-sm font-bold flex items-center shadow">
                         <i class="fas fa-star text-accent mr-1"></i> ${place.rating.toFixed(1)}
                     </div>
+                    <div class="absolute bottom-3 left-3 bg-black/60 text-white px-2 py-1 rounded-md text-xs backdrop-blur-sm">
+                        ${place.province}
+                    </div>
                 </div>
-                <div class="p-5">
+                <div class="p-5 flex-grow flex flex-col">
                     <div class="text-xs text-primary font-bold uppercase tracking-wider mb-1">${place.category}</div>
                     <h3 class="text-xl font-bold mb-2">${place.name}</h3>
                     <p class="text-gray-500 text-sm mb-4"><i class="fas fa-map-marker-alt mr-1"></i> ${place.location}</p>
-                    <p class="text-gray-600 text-sm line-clamp-2">${place.description}</p>
+                    <p class="text-gray-600 text-sm line-clamp-2 mt-auto">${place.description}</p>
                 </div>
             `;
             grid.appendChild(card);
         });
     }
 
-    function filterPlaces(category) {
-        // Update button styles
-        document.querySelectorAll('.cat-btn').forEach(btn => {
-            btn.className = "cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0 transition";
-        });
-        event.currentTarget.className = "cat-btn bg-primary text-white px-6 py-2 rounded-full font-medium shadow-sm flex-shrink-0 transition";
+    function setCategory(category, btnElement) {
+        activeCategory = category;
         
-        renderPlaces(category);
+        // Update button styles visually
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.className = "cat-btn bg-white text-gray-600 hover:bg-gray-100 px-6 py-2 rounded-full border border-gray-200 font-medium shadow-sm flex-shrink-0 transition duration-300";
+        });
+        btnElement.className = "cat-btn bg-primary text-white px-6 py-2 rounded-full font-medium shadow-sm flex-shrink-0 transition duration-300";
+        
+        applyFilters();
+    }
+
+    function searchByProvince() {
+        const select = document.getElementById('province-select');
+        activeProvince = select.value;
+        applyFilters();
+        
+        // Smooth scroll to results
+        document.getElementById('places-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function openModal(id) {
@@ -338,7 +418,7 @@
             
             // Refresh modal and grid
             openModal(currentSelectedPlaceId);
-            renderPlaces('all'); // Reset grid view
+            applyFilters(); // Reset grid view with current filters
             
             // Show Success Toast
             showToast("Review published successfully!");
@@ -358,7 +438,7 @@
 
     // Initialize application on load
     window.onload = () => {
-        renderPlaces();
+        applyFilters();
     };
 </script>
 </body>
